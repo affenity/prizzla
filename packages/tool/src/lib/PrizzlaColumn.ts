@@ -1,4 +1,4 @@
-export type PrizzlaColumnType = "text" | "int" | "bigint" | "varchar" | "decimal" | "json" | "datetime" | "date";
+export type PrizzlaColumnType = "text" | "int" | "bigint" | "varchar" | "decimal" | "json" | "datetime" | "date" | "bool";
 export type PrizzlaColumnConfig = {
     name: string;
     type: PrizzlaColumnType;

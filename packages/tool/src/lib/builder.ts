@@ -1,10 +1,20 @@
 import { PrizzlaColumn } from "./PrizzlaColumn.ts";
+import { PrizzlaIndex } from "./PrizzlaIndex.ts";
+import { PrizzlaRelation, type PrizzlaRelationConfig } from "./PrizzlaRelation.ts";
+import type { PrizzlaTable } from "./PrizzlaTable.ts";
 
 export class ColumnBuilder {
     text(name: string) {
         return new PrizzlaColumn({
             name,
             type: "text"
+        });
+    }
+
+    bool(name: string) {
+        return new PrizzlaColumn({
+            name,
+            type: "bool"
         });
     }
 
@@ -60,15 +70,45 @@ export class ColumnBuilder {
 
 export class IndexBuilder {
     unique() {
-
+        return new PrizzlaIndex({
+            type: "unique",
+            colType: "single",
+        });
     }
 
-    name() {
-
+    index() {
+        return new PrizzlaIndex({
+            type: "index",
+            colType: "single"
+        });
     }
 
     fts() {
+        return new PrizzlaIndex({
+            type: "fts",
+            colType: "single"
+        });
+    }
+}
 
+
+export class RelationBuilder {
+    many<Cb extends (() => (PrizzlaTable<any> | any)), Tar extends ReturnType<Cb> = ReturnType<Cb>>(target: Tar) {
+        return new PrizzlaRelation<PrizzlaRelationConfig & { target: Tar; }>({
+            target,
+            type: "one",
+            references: [],
+            source: []
+        });
+    }
+
+    one<Cb extends (() => (PrizzlaTable<any> | any)), Tar extends ReturnType<Cb> = ReturnType<Cb>>(target: Tar) {
+        return new PrizzlaRelation<PrizzlaRelationConfig & { target: Tar; }>({
+            target: target,
+            type: "one",
+            references: [],
+            source: []
+        });
     }
 }
 

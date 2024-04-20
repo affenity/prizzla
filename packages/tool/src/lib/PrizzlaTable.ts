@@ -1,5 +1,7 @@
 import type { PrizzlaColumn } from "./PrizzlaColumn.ts";
 import type { PrizzlaIndex } from "./PrizzlaIndex.ts";
+import type { RelationBuilder } from "./builder.ts";
+import type { PrizzlaRelation } from "./PrizzlaRelation.ts";
 
 type TableSchemaDef = Record<string, PrizzlaColumn<any>>;
 type TableIndexDef = Record<string, PrizzlaIndex<any>>;
@@ -13,6 +15,10 @@ export type PrizzlaTableConfig = {
 export class PrizzlaTable<Conf extends PrizzlaTableConfig> {
     constructor(public __def: Conf) {
 
+    }
+
+    col<N extends keyof Conf["schema"], V extends Conf["schema"][N]>(name: N): V {
+        return (this.__def.schema as Conf["schema"])[name as N] as V;
     }
 
     define<
@@ -39,5 +45,9 @@ export class PrizzlaTable<Conf extends PrizzlaTableConfig> {
             ...this.__def,
             metadata
         });
+    }
+
+    relations<Cb extends ((builder: RelationBuilder) => Record<string, PrizzlaRelation<any>>)>(relations: Cb) {
+        return this;
     }
 }
